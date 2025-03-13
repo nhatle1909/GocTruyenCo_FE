@@ -1,10 +1,15 @@
 import { Box, CssBaseline, Drawer } from "@mui/material"
-import { Outlet, OutletProps } from "react-router-dom"
+import { Outlet, OutletProps, useNavigate } from "react-router-dom"
 import { DashboardHeader } from "../components/DashboardHeader"
 import { NavtabItem } from "../components/NavtabItem"
 import zIndex from "@mui/material/styles/zIndex"
+import { useEffect } from "react"
 
 export const AdminDashboardLayout = () => {
+    const navigate = useNavigate();
+    useEffect(() => {
+        navigate("/admin/account");
+    }, [])
     return (
         <Box sx={styles.container}>
             <CssBaseline />
@@ -12,8 +17,9 @@ export const AdminDashboardLayout = () => {
             <Box component="main" sx={styles.main}>
                 <Drawer sx={styles.drawer} variant="persistent" open={true}>
                     <Box sx={styles.drawerContent}>
-                        <NavtabItem title='Account' navigateLink='admin/account' />
-                        <NavtabItem title='Ticket' navigateLink='admin/ticket' />
+                        <NavtabItem title='Account' navigateLink='admin/account' iconName="ManageAccounts" />
+                        <NavtabItem title='Ticket' navigateLink='admin/ticket' iconName="ReportProblem" />
+                        <NavtabItem title='Comic' navigateLink='admin/comic/search' iconName="AutoStories"/>
                     </Box>
                 </Drawer>
                     <Outlet />

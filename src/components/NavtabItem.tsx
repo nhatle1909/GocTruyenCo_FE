@@ -2,18 +2,25 @@ import React from 'react';
 import { Button, Typography, SxProps, Theme } from "@mui/material";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { useNavigate } from "react-router-dom";
-
+import * as Icons from '@mui/icons-material';
+import Icon from '@material-ui/core/Icon';
 interface NavtabItemProps {
     title: string;
     navigateLink: string;
+    iconName:string;
 }
 
-export const NavtabItem: React.FC<NavtabItemProps> = ({ title, navigateLink }) => {
+export const NavtabItem: React.FC<NavtabItemProps> = ({ title, navigateLink,iconName }) => {
     const navigate = useNavigate();
-
+    const IconComponent = (Icons as Record<string, any>)[iconName];
+    if (!IconComponent) {
+        console.error(`Icon ${iconName} not found!`);  // Handle missing icon
+        return null; // Or return a default icon
+    }
     return (
         <Button sx={styles.navtabItem} onClick={() => navigate(`/${navigateLink}`)}>
-            <ManageAccountsIcon sx={styles.icon} />
+            <IconComponent sx={styles.icon} />
+
             <Typography sx={styles.text}>{title}</Typography>
         </Button>
     );
@@ -24,7 +31,7 @@ const styles: Record<string, SxProps<Theme>> = {
    
         width: { xs: '50%', sm: '75%', md: '100%' },
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: {xs:'center',md:'flex-start'},
         alignItems: 'center',
         cursor: 'pointer',
         border: '1px solid',
@@ -39,7 +46,7 @@ const styles: Record<string, SxProps<Theme>> = {
         width: { xs: 18, sm: 20, md: 22, lg: 24 },
         height: { xs: 18, sm: 20, md: 22, lg: 24 },
         color: '#432571',
-        // marginLeft: { xs: '3%', sm: '4%', md: '5%' },
+        marginLeft: { xs: '3%', sm: '4%', md: '5%' },
         marginRight: { xs: '3%', sm: '4%', md: '5%' },
     },
     text: {
