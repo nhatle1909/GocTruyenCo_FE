@@ -4,7 +4,7 @@ import {  useEffect, useState } from "react";
 import { styles } from "../Style/DashboardStyle";
 import { ComicModel, CountPageComicAPI, GetComicPagingAPI } from "../../../model/ComicModel";
 
-import { ExpandableCategoryList } from "../../../components/ExpandableBox";
+import { ExpandableCategoryList } from "../../../components/common/ExpandableBox";
 import { cleanStringArray, stringArrayToString } from "../../../utils/Utils";
 import {
     KeyboardDoubleArrowDown as KeyboardDoubleArrowDownIcon,

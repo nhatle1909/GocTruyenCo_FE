@@ -8,14 +8,11 @@ export interface AccountModel {
     createdDate:string,
     isRestricted:boolean
 }
-export const GetAccountPaging = async (searchFields:string[],searchValues:string[],sortField:string,sortAsc:boolean,pageSize:number,skip:number, token: string) => {
+
+export const GetAccountPaging = async (searchFields:string[],searchValues:string[],sortField:string,sortAsc:boolean,pageSize:number,skip:number) => {
     try {
         let searchQuery = createSearchQuery(searchFields,searchValues,sortField,sortAsc,pageSize,skip);
-        const response = await client.get('Account?' + searchQuery, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const response = await client.get('Account?' + searchQuery);
         if (response.status == 200)
             return response.data.result;
     } catch (error) {
@@ -23,14 +20,10 @@ export const GetAccountPaging = async (searchFields:string[],searchValues:string
         return false;
     }
 }
-export const CountPageAccountAsync = async (searchFields:string[],searchValues:string[],pageSize:number,token:string) => {
+export const CountPageAccountAsync = async (searchFields:string[],searchValues:string[],pageSize:number) => {
     try{
         let searchQuery = createCountQuery(searchFields,searchValues,pageSize);
-        const response = await client.get('Account/Count?' + searchQuery, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const response = await client.get('Account/Count?' + searchQuery);
         if (response.status == 200)
             return response.data.result;
     }catch (err) {
@@ -38,14 +31,10 @@ export const CountPageAccountAsync = async (searchFields:string[],searchValues:s
         return false;
     }
 }
-export const RestrictAccount = async (accountId:string,token: string) => {
+export const RestrictAccount = async (accountId:string) => {
     try {
     
-        const response = await client.delete('Account/' + accountId, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const response = await client.delete('Account/' + accountId);
         if (response.status == 200)
             return response.data.message;
     }
@@ -54,13 +43,9 @@ export const RestrictAccount = async (accountId:string,token: string) => {
         return false;
     }
 }
-export const UpdateAccount = async (accountId:string,token: string) => {
+export const UpdateAccount = async (accountId:string) => {
     try {
-        const response = await client.put('Role/' + accountId, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const response = await client.put('Role/' + accountId);
         if (response.status == 200)
             return response.data.result;
     }

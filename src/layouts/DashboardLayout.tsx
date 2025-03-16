@@ -1,7 +1,7 @@
 import { Box, CssBaseline, Drawer } from "@mui/material"
 import { Outlet, OutletProps, useNavigate } from "react-router-dom"
-import { DashboardHeader } from "../components/DashboardHeader"
-import { NavtabItem } from "../components/NavtabItem"
+import { DashboardHeader } from "../components/headers/DashboardHeader"
+import { NavtabItem } from "../components/common/NavItem"
 import zIndex from "@mui/material/styles/zIndex"
 import { useEffect } from "react"
 

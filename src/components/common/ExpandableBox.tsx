@@ -1,8 +1,8 @@
 import { Box, Button, Grid2, IconButton, List, ListItem, ListItemButton, Typography } from "@mui/material"
-import { ThreeStateCheckbox } from "./Checkbox"
+import { ThreeStateCheckbox } from "../Checkbox"
 import { ExpandCircleDown, ExpandLess, ExpandMore, Grid4x4 } from "@mui/icons-material"
 import { useEffect, useState } from "react"
-import { ComicCategoryModel, GetAllComicCategories } from './../model/ComicCategoryModel';
+import { ComicCategoryModel, GetAllComicCategories } from '../../model/ComicCategoryModel';
 
 
 interface ExpandableBoxProps {
