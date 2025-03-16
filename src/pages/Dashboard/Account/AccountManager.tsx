@@ -35,14 +35,14 @@ export const Account = () => {
   const [trigger, setTrigger] = useState({ trigger: false, message: "" });
   const RowsPerPage = ["5", "10", "15"];
   const RestrictAccountAndSearch = async (accountId: string) => {
-    const message = await RestrictAccount(accountId, "");
+    const message = await RestrictAccount(accountId);
     setTrigger({ trigger: !trigger.trigger, message: message });
     setIsSearch(!isSearch);
   }
   useEffect(() => {
     const fetch = async () => {
-      const AccountResponse = await GetAccountPaging(searchFields, searchValues, sortBy, sortAsc, pageSize, skip, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJlZmE1ZjFmNC1iMzI3LTQ3YjctODA5My0zZjczZjQxOWE2ODciLCJyb2xlIjoiQWRtaW4iLCJ1bmlxdWVfbmFtZSI6InN0cmluZyIsImVtYWlsIjoic3RyaW5nQGdtYWlsLmNvbSIsIm5iZiI6MTczOTk3MzA2MCwiZXhwIjoxNzQwMDE2MjYwLCJpYXQiOjE3Mzk5NzMwNjAsImlzcyI6IkdvY1RydXllblRyYW5oIiwiYXVkIjoiR29jVHJ1eWVuVHJhbmgifQ.r8IoTTjRvZInDgSu6PBhYw235Cev-6bFJvdV-8cbJ-M");
-      const CountResponse = await CountPageAccountAsync(searchFields, searchValues, pageSize, "");
+      const AccountResponse = await GetAccountPaging(searchFields, searchValues, sortBy, sortAsc, pageSize, skip);
+      const CountResponse = await CountPageAccountAsync(searchFields, searchValues, pageSize);
       await setCount(CountResponse);
       await setData(AccountResponse);
     };

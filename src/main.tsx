@@ -1,15 +1,18 @@
-
+import React from 'react';
 import ReactDOM from 'react-dom/client';
+
+import { ThemeProvider } from './context/ThemeContext';
 import { BrowserRouter } from 'react-router-dom';
-
 import AdminRoutes from './routes/Admin/AdminRoutes';
+import { MainRoutes } from './routes/mainRoutes';
 
-
-const root = ReactDOM.createRoot(document.getElementById('root')!);
-root.render(
-  // <StrictMode>
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
  <BrowserRouter>
-   <AdminRoutes/>
+      <ThemeProvider>
+        <AdminRoutes/>
+        <MainRoutes/>
+      </ThemeProvider>
   </BrowserRouter>
-  // </StrictMode>
-)
+  </React.StrictMode>
+);

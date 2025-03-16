@@ -1,9 +1,8 @@
 import React from 'react';
 import { Button, Typography, SxProps, Theme } from "@mui/material";
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { useNavigate } from "react-router-dom";
 import * as Icons from '@mui/icons-material';
-import Icon from '@material-ui/core/Icon';
+
 interface NavtabItemProps {
     title: string;
     navigateLink: string;

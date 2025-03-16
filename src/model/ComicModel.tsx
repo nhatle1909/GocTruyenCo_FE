@@ -38,13 +38,9 @@ export const CreateNewComic =  async (uploaderId:string,name:string,description:
     }
 }
 //----------------------------------------------------------------API----------------------------------------------------------------
-export const GetComicByIdAPI = async (id:string,token:string) => {
+export const GetComicByIdAPI = async (id:string) => {
     try{
-        const response = await client.get('Comic/' + id, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const response = await client.get('Comic/' + id);
         if (response.status == 200)
             return response.data.result;
     }
@@ -53,15 +49,10 @@ export const GetComicByIdAPI = async (id:string,token:string) => {
         return false;
     }
 }
-export const GetComicPagingAPI = async (searchFields:string[],searchValues:string[],sortField:string,sortAsc:boolean,pageSize:number,skip:number, token: string) => {
+export const GetComicPagingAPI = async (searchFields:string[],searchValues:string[],sortField:string,sortAsc:boolean,pageSize:number,skip:number) => {
     try {
         let searchQuery = createSearchQuery(searchFields,searchValues,sortField,sortAsc,pageSize,skip);
-        const response = await client.get('Comic?' + searchQuery, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
-        );
+        const response = await client.get('Comic?' + searchQuery);
         if (response.status == 200)
             return response.data.result;
     } catch (error) {
@@ -69,14 +60,10 @@ export const GetComicPagingAPI = async (searchFields:string[],searchValues:strin
         return false;
     }
 }
-export const CountPageComicAPI = async (searchFields:string[],searchValues:string[],pageSize:number,token:string) => {
+export const CountPageComicAPI = async (searchFields:string[],searchValues:string[],pageSize:number) => {
     try{
         let searchQuery = createCountQuery(searchFields,searchValues,pageSize);
-        const response = await client.get('Comic/Count?' + searchQuery, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const response = await client.get('Comic/Count?' + searchQuery);
         if (response.status == 200)
             return response.data.result;
     }catch (err) {
