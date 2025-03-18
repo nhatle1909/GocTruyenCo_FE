@@ -6,7 +6,6 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { ThemeContext } from '../../context/ThemeContext';
 import {NotificationItem} from './../Notification';
-import { Outlet } from 'react-router-dom';
 
 interface DashboardHeaderProps {
   avatarURL: string;
@@ -75,8 +74,8 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   return (
     <AppBar position="fixed" elevation={5} sx={styles.appBar}>
       <Toolbar sx={{ width: '15%' }}>
-        <Typography variant="h5" color='black'  component="div">{title1}</Typography>
-        <Typography variant="h5" color='purple' noWrap component="div">{title2}</Typography>
+        <Typography variant="h5" color='primary.main'  component="div">{title1}</Typography>
+        <Typography variant="h5" color='primary.main'    component="div">{title2}</Typography>
       </Toolbar>
       <Box sx={styles.box}>
         <IconButton onClick={toggleTheme}>
@@ -101,8 +100,8 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             horizontal: 'right',
           }}
         >
-          {notifications.map((item, index) => (
-          <NotificationItem avatar={item.avatar} title={item.title} message={item.content} time={item.date} type="success"/>
+          {notifications.map((item) => (
+          <NotificationItem avatar={item.avatar} title={item.title} message={item.content} date={item.date} type="success"/>
         ))}
         </Popover>
         <Avatar src={avatarURL} sx={styles.avatar} />
@@ -119,12 +118,16 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
 const styles = {
   appBar: {
-    backgroundColor: 'white',
+    backgroundColor: 'background.paper',
     top: 'auto',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottom:'1px solid black'
+    borderBottom: '1px solid',
+    borderColor: 'divider',
+    // paddingLeft: '2%',
+    // paddingRight: '2%',
+    height: '64px',
   },
   box: {
     display: 'flex',
@@ -137,6 +140,7 @@ const styles = {
     width: 35,
     height: 35,
     margin: '0 16px',
+
   },
   notificationList: {
     width: 250,

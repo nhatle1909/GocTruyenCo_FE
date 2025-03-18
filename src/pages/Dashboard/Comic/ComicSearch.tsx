@@ -1,5 +1,5 @@
-import { Box, Paper, useMediaQuery, useTheme, TableContainer, Table, TableRow, TableHead, TableCell, TableBody, FormControl, InputLabel, Select, Pagination, MenuItem, Tooltip, IconButton, TextField, List, ListItem, Grid2, Typography, Button } from "@mui/material"
-import {  useEffect, useState } from "react";
+import { Box, Paper, useMediaQuery, useTheme, TableContainer, Table, TableRow, TableHead, TableCell, TableBody, FormControl, InputLabel, Select, Pagination, MenuItem, Tooltip, IconButton, TextField, Typography, Button } from "@mui/material"
+import { useEffect, useState } from "react";
 
 import { styles } from "../Style/DashboardStyle";
 import { ComicModel, CountPageComicAPI, GetComicPagingAPI } from "../../../model/ComicModel";
@@ -12,23 +12,24 @@ import {
     Search as SearchIcon
 } from '@mui/icons-material';
 import { useNavigate } from "react-router-dom";
+import { LoadingAnimation } from './../../../components/common/LoadingAnimation';
 
 export const ComicSearch = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const navigate = useNavigate();
-
-    const [data, setData] = useState<ComicModel[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [data, setData] = useState<ComicModel[] | null>(null);
     const [count, setCount] = useState(1);
     const [pageSize, setPageSize] = useState(5);
     const [skip, setSkip] = useState(1);
-    const [searchFields, setSearchFields] = useState(["Name", "Status", "CategoryId"]);
-    const [searchValue, setSearchValues] = useState(["", "", " "]);
+    const [searchFields, setSearchFields] = useState(["UploaderId","Name", "Status", "CategoryId"]);
+    const [searchValue, setSearchValues] = useState(["","", "", " "]);
     const [sortBy, setSortBy] = useState('Name');
     const [sortAsc, setSortAsc] = useState(true);
     const [isSearch, setIsSearch] = useState(true);
     const RowsPerPage = ["5", "10", "15"];
-   
+
     const [categoryStringArray, setCategoryStringArray] = useState([""]);
     const updateSearchValue = async (index: number, newValue: string) => {
         try {
@@ -51,28 +52,31 @@ export const ComicSearch = () => {
     }
     useEffect(() => {
         const fetchComicData = async () => {
+            setIsLoading(true);
             try {
                 searchValue[2] = stringArrayToString(cleanStringArray(categoryStringArray));
-                const response = await GetComicPagingAPI(searchFields, searchValue, sortBy, sortAsc, pageSize, skip, "");
+                const response = await GetComicPagingAPI(searchFields, searchValue, sortBy, sortAsc, pageSize, skip);
 
-                const CountResponse = await CountPageComicAPI(searchFields, searchValue, pageSize, "");
+                const CountResponse = await CountPageComicAPI(searchFields, searchValue, pageSize);
                 setData(response);
                 setCount(CountResponse);
 
             } catch (error) {
-                console.log(error);
+                setData(null);
+                setCount(1);
             }
+            setIsLoading(false);
         }
         fetchComicData();
     }, [isSearch, skip, pageSize])
     return (
         <Box>
             <Paper component="form" elevation={3} sx={style.searchBox(theme, isMobile)}>
-                <Box sx={[styles.searchBar(theme, isMobile), { borderRadius: 0, boxShadow: 0 }]}>
-                    <TextField sx={styles.inputField(isMobile)} label="Search by title" variant="outlined" size="small" fullWidth
+                <Box sx={[styles.searchBar(theme, isMobile), { borderRadius: 2, boxShadow: 0 }]}>
+                    <TextField sx={styles.inputField(theme,isMobile)} label="Search by title" variant="outlined" size="small" fullWidth
                         value={searchValue[0]}
                         onChange={(e) => updateSearchValue(0, e.target.value.toString())} />
-                    <FormControl sx={styles.selectBox(isMobile)} size="small">
+                    <FormControl sx={styles.selectBox(theme,isMobile)} size="small">
                         <InputLabel>Status</InputLabel>
                         <Select value={searchValue[1]} label="Status" onChange={(e) => updateSearchValue(1, e.target.value.toString())} >
                             <MenuItem value=" ">All</MenuItem>
@@ -81,7 +85,7 @@ export const ComicSearch = () => {
                             <MenuItem value="Dropped">Dropped</MenuItem>
                         </Select>
                     </FormControl>
-                    <FormControl sx={styles.selectBox(isMobile)} size="small">
+                    <FormControl sx={styles.selectBox(theme,isMobile)} size="small">
                         <InputLabel>Sort by</InputLabel>
                         <Select value={sortBy} label="Sort by" onChange={(e) => setSortBy(e.target.value)}>
                             <MenuItem value="Name">Title</MenuItem>
@@ -121,32 +125,38 @@ export const ComicSearch = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data !== null ? (
-                                data.map((row) => (
-                                    <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                        <TableCell component="th"  scope="row"><Typography sx={{ cursor: 'pointer', textDecoration: 'underline', color: 'blue' }}>{row.name}</Typography></TableCell>
-                                        <TableCell align="left">{row.description}</TableCell>
-                                        <TableCell align="left">{row.categoryName.join(" | ")}</TableCell>
-                                        <TableCell align="left">{row.uploaderName}</TableCell>
-                                        <TableCell align="left">{row.chapters}</TableCell>
-                                        <TableCell align="left">{row.status}</TableCell>
-                                        <TableCell align="left">{row.createdDate}</TableCell>
-                                        <TableCell align="left">
-                                            <Button size="small" color="primary" variant="contained" sx={{ marginRight: 1 }}
-                                                  onClick={() => navigateComicDetail(row.id)}>Add new chapter</Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            ) : (
-                                <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                    <TableCell colSpan={3} align="center">No data available</TableCell>
-                                </TableRow>
+                            {isLoading ? (<TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                <TableCell colSpan={8} align="center"><LoadingAnimation /></TableCell>
+                            </TableRow>) : (
+                                <>
+                                    {data && data.length > 0 ? (
+                                        data.map((row) => (
+                                            <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                                <TableCell component="th" scope="row"><Typography sx={{ cursor: 'pointer', textDecoration: 'underline', color: 'blue' }}>{row.name}</Typography></TableCell>
+                                                <TableCell align="left">{row.description}</TableCell>
+                                                <TableCell align="left">{row.categoryName.join(" | ")}</TableCell>
+                                                <TableCell align="left">{row.uploaderName}</TableCell>
+                                                <TableCell align="left">{row.chapters}</TableCell>
+                                                <TableCell align="left">{row.status}</TableCell>
+                                                <TableCell align="left">{row.createdDate}</TableCell>
+                                                <TableCell align="left">
+                                                    <Button size="small" color="primary" variant="contained" sx={{ marginRight: 1 }}
+                                                        onClick={() => navigateComicDetail(row.id)}>Add new chapter</Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                            <TableCell colSpan={8} align="center">No data available</TableCell>
+                                        </TableRow>
+                                    )}
+                                </>
                             )}
                         </TableBody>
                     </Table>
                 </TableContainer>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1%' }}>
-                    <FormControl sx={[styles.selectBox(isMobile), { marginRight: '1%' }]} size="small">
+                    <FormControl sx={[styles.selectBox(theme, isMobile), { marginRight: '1%' }]} size="small">
                         <InputLabel>Rows per page</InputLabel>
                         <Select value={pageSize} label="Rows per page" onChange={(e) => setPageSize(Number(e.target.value.toString()))}>
                             {RowsPerPage.map((option) => (
@@ -165,7 +175,7 @@ export const ComicSearch = () => {
 }
 const style = ({
     tabPanel: {
-        backgroundColor: 'white',
+        backgroundColor: 'theme.palette.background.paper',
         width: 'auto',
         maxWidth: '95%',
         borderRadius: 2,
@@ -181,5 +191,6 @@ const style = ({
         maxWidth: { sm: '80%', md: '70%', lg: '60%' },
         margin: isMobile ? "2%" : "1%",
         marginBottom: theme.spacing(3),
+        borderRadius:2
     })
 })

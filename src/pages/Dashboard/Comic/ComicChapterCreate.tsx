@@ -10,29 +10,30 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { useEffect, useRef, useState } from "react";
 import { ComicModel, GetComicByIdAPI } from "../../../model/ComicModel";
 import { ComicChapterModel, GetComicChapterPagingAPI } from "../../../model/ComicChapterModel";
+import { TabPanel } from "../../../components/TabPanel";
 
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: number;
-    value: number;
-}
+// interface TabPanelProps {
+//     children?: React.ReactNode;
+//     index: number;
+//     value: number;
+// }
 
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{ p: 3 }}>
-                    {children}
-                </Box>
-            )}
-        </div>
-    );
-}
+// function TabPanel(props: TabPanelProps) {
+//     const { children, value, index, ...other } = props;
+//     return (
+//         <div
+//             role="tabpanel"
+//             hidden={value !== index}
+//             {...other}
+//         >
+//             {value === index && (
+//                 <Box sx={{ p: 3 }}>
+//                     {children}
+//                 </Box>
+//             )}
+//         </div>
+//     );
+// }
 
 export const ComicChapterCreate = () => {
     const theme = useTheme();
@@ -51,7 +52,7 @@ export const ComicChapterCreate = () => {
 
     useEffect(() => {
         const fetchComicById = async () => {
-            const response = await GetComicByIdAPI(comicId, "");
+            const response = await GetComicByIdAPI(comicId);
             await setComic(response);
         }
         fetchComicById();
@@ -99,7 +100,7 @@ export const ComicChapterCreate = () => {
                     <Tabs
                         orientation={isMobile ? 'vertical' : 'horizontal'}
                         variant="fullWidth"
-                        sx={styles.tabs(isMobile)}
+                        sx={styles.tabs(theme,isMobile)}
                         value={tabValue}
                         onChange={handleTabChange}
 
@@ -156,7 +157,7 @@ export const ComicChapterCreate = () => {
                         <TextField
                             label="Chapter Title"
                             variant="outlined"
-                            sx={styles.inputField(isMobile )}
+                            sx={styles.inputField(theme,isMobile )}
                         />
                         <IconButton
                             // variant="contained"

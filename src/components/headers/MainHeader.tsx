@@ -36,6 +36,7 @@ import { Notification } from '../Notification';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { LoginAPI } from '../../model/AuthModel';
 import { ComicModel, GetComicPagingAPI } from '../../model/ComicModel';
+import { useAuthStore } from '../../store/authStore';
 
 const navigationItems = [
   { text: 'Home', icon: <HomeIcon />, path: '/' },
@@ -61,11 +62,17 @@ export const MainHeader = () => {
     email: '',
     password: ''
   });
+  const { setToken, clearToken, token, isAuthenticated } = useAuthStore();
   
   const open = Boolean(anchorEl);
   const id = open ? 'notification-popover' : undefined;
+
+ 
   const onLogOut = () => {
+    setIsLoggedIn(false);
+    clearToken();
   }
+
   const onLoginFormClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   }
@@ -73,15 +80,19 @@ export const MainHeader = () => {
   const handleClose = () => {
     setAnchorEl(null);
   }
+
   const handleLoginSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (await LoginAPI(loginForm.email, loginForm.password)) {
-      console.log("login success")
+    // e.preventDefault();
+    try {
+      const response = await LoginAPI(loginForm.email, loginForm.password);
+      if (response?.token) {
+        setToken(response.token);
+        setAnchorEl(null);
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
     }
-    else return
-    setAnchorEl(null);
-    setIsLoggedIn(true);
-    console.log('Login submitted:', loginForm);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,6 +106,17 @@ export const MainHeader = () => {
       [name]: ''
     }));
   };
+
+  useEffect(() => {
+    const keepLoggedIn = () => {
+      console.log(isAuthenticated, token);
+      if (token) {
+        setIsLoggedIn(true);
+      }
+    }
+   keepLoggedIn();
+  }, []);
+
   useEffect(() => {
     const fetchComicSearchOptions = async () => {
       try {
@@ -106,8 +128,19 @@ export const MainHeader = () => {
     };
     fetchComicSearchOptions();
   }, [searchValue]);
-  return (
 
+  useEffect(() => {
+    const initializeAuth = () => {
+      const token = useAuthStore.getState().token;
+      console.log("Mounted")
+      if (token && !isAuthenticated) {
+        setToken(token);
+      }
+};
+    initializeAuth();
+  }, []);
+
+  return (
     <AppBar position="fixed" elevation={5} sx={styles.appBar}>
       <Toolbar sx={styles.leftSection}>
         <Typography variant="h6" component={RouterLink} to="/" sx={styles.logo}>
@@ -242,7 +275,6 @@ export const MainHeader = () => {
         </Popover>
       </Box>
     </AppBar>
-
   );
 };
 

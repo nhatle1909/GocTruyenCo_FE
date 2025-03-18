@@ -44,14 +44,14 @@ const styles: Record<string, SxProps<Theme>> = {
     icon: {
         width: { xs: 18, sm: 20, md: 22, lg: 24 },
         height: { xs: 18, sm: 20, md: 22, lg: 24 },
-        color: '#432571',
+        color: 'background.dark',
         marginLeft: { xs: '3%', sm: '4%', md: '5%' },
         marginRight: { xs: '3%', sm: '4%', md: '5%' },
     },
     text: {
         fontSize: { md: 12, lg: 16 },
         display: { xs: 'none', sm:'none', md: 'inline' },
-        color: '#333',
+        color: 'background.dark',
         whiteSpace: 'nowrap',
     }
 };

@@ -7,7 +7,7 @@ interface ThemeContextType {
 }
 
 export const ThemeContext = createContext<ThemeContextType>({
-  toggleTheme: () => {},
+  toggleTheme: () => { },
   mode: 'light'
 });
 
@@ -19,11 +19,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   const theme = createTheme({
-        palette: {
-          mode,
+    palette: {
+      mode,
       primary: {
         main: mode === 'light' ? '#1976d2' : '#90caf9',
-        },
+      },
       background: {
         default: mode === 'light' ? '#f5f5f5' : '#121212',
         paper: mode === 'light' ? '#ffffff' : '#1e1e1e',

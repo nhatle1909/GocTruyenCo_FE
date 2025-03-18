@@ -24,13 +24,14 @@ export const ImageSlider = () => {
     const [currentSlideContent, setCurrentSlideContent] = useState([]);
 
     useEffect(() => {
+        const updateSlideContent = (slideIndex: number) => {
+            const startIndex = slideIndex * imagesPerSlide;
+            setCurrentSlideContent(Images.slice(startIndex, startIndex + imagesPerSlide));
+        };
         updateSlideContent(currentSlide);
-    }, [currentSlide, Images]);
+    }, [currentSlide]);
 
-    const updateSlideContent = (slideIndex: number) => {
-        const startIndex = slideIndex * imagesPerSlide;
-        setCurrentSlideContent(Images.slice(startIndex, startIndex + imagesPerSlide));
-    };
+
     const handlePrevSlide = () => {
         setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
     };
@@ -142,18 +143,13 @@ const style = {
         textOverflow: 'ellipsis',
     },
     navigationButton: {
-        // position: 'absolute',
+      
         zIndex: 1,
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.9)',
             borderColor: 'primary.main'
         },
-        // '&.prev': {
-        //     left: 10,
-        // },
-        // '&.next': {
-        //     right: 10,
-        // },
+    
     },
 };
