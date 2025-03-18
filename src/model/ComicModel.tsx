@@ -15,21 +15,21 @@ export interface ComicModel{
 }
 
 //------------------------------------------Function-------------------------------------------
-export const GetComicById = async (id:string,token:string) => {
+export const GetComicById = async (id:string) => {
     const [comic,setComic] = useState<ComicModel>();
     useEffect(() => {
        const fetchComicById = async () => {
-            const response = await GetComicByIdAPI(id,token);
+            const response = await GetComicByIdAPI(id);
             await setComic(response);
         }
         fetchComicById();
     },[id])
     return comic
 }
-export const CreateNewComic =  async (uploaderId:string,name:string,description:string,categoryId:string[],imageFile:any,token:string) => {
+export const CreateNewComic =  async (uploaderId:string,name:string,description:string,categoryId:string[],imageFile:any) => {
     try{
         const imageUrl = await UploadComicThemeAPI(name,imageFile);
-        const response = await CreateNewComicAPI(uploaderId,name,description,imageUrl,categoryId,token);
+        const response = await CreateNewComicAPI(uploaderId,name,description,imageUrl,categoryId);
         return response;
     }
     catch (error) {
@@ -71,7 +71,8 @@ export const CountPageComicAPI = async (searchFields:string[],searchValues:strin
         return false;
     }
 }
-export const CreateNewComicAPI = async (uploaderId:string,name:string,description:string,themeURL:string,categoryId:string[],token:string) => {
+export const CreateNewComicAPI = async (uploaderId:string,name:string,description:string,themeURL:string,categoryId:string[]) => {
+    
     const formData = {
         uploaderId: uploaderId,
         name: name,
@@ -81,6 +82,7 @@ export const CreateNewComicAPI = async (uploaderId:string,name:string,descriptio
         chapters: 0,
         status: 'InProgress',
     }
+    const token ="";
     try {
         const response = await client.post('Comic', formData,
           {

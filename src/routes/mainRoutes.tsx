@@ -6,8 +6,8 @@ export const MainRoutes = () => {
     return (
         <Routes>
             <Route path="" element={<MainLayout />} >
-            <Route  index element={<Homepage />} />
+                <Route index element={<Homepage />} />
             </Route>
-            </Routes>
+        </Routes>
     )
 }

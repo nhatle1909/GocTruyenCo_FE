@@ -19,11 +19,13 @@ import {
 } from '@mui/icons-material';
 import { AccountModel, CountPageAccountAsync, GetAccountPaging, RestrictAccount } from '../../../model/AccountModel';
 import { styles } from '../Style/DashboardStyle';
+import { LoadingAnimation } from '../../../components/common/LoadingAnimation';
 export const Account = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [IsLoading,setIsLoading] = useState(true);
 
-  const [data, setData] = useState<AccountModel[]>([]);
+  const [data, setData] = useState<AccountModel[] | null>(null);
   const [count, setCount] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [skip, setSkip] = useState(1);
@@ -41,10 +43,19 @@ export const Account = () => {
   }
   useEffect(() => {
     const fetch = async () => {
+      
+      setIsLoading(true);
+      try{
       const AccountResponse = await GetAccountPaging(searchFields, searchValues, sortBy, sortAsc, pageSize, skip);
       const CountResponse = await CountPageAccountAsync(searchFields, searchValues, pageSize);
       await setCount(CountResponse);
       await setData(AccountResponse);
+      }
+      catch{
+        setData(null)
+        setCount(1);
+      }
+      setIsLoading(false);
     };
     fetch();
   }, [isSearch, skip, pageSize])
@@ -59,10 +70,10 @@ export const Account = () => {
         message={trigger.message}
       />
       <Paper component="form" elevation={3} sx={styles.searchBar(theme, isMobile)}>
-        <TextField sx={styles.inputField(isMobile)} label="Search here" variant="outlined" size="small" fullWidth
+        <TextField sx={styles.inputField(theme,isMobile)} label="Search here" variant="outlined" size="small" fullWidth
           value={searchValues} onChange={(e) => setSearchValues([e.target.value.toString()])}
           onKeyDown={(e) => { if (e.key === 'Enter') setIsSearch(!isSearch) }} />
-        <FormControl sx={styles.selectBox(isMobile)} size="small">
+        <FormControl sx={styles.selectBox(theme,isMobile)} size="small">
           <InputLabel>Search by</InputLabel>
           <Select value={searchFields} label="Search by" onChange={(e) => setSearchFields([e.target.value.toString()])} >
             <MenuItem value="Username">Username</MenuItem>
@@ -70,7 +81,7 @@ export const Account = () => {
             <MenuItem value="CreatedDate">Created At</MenuItem>
           </Select>
         </FormControl>
-        <FormControl sx={styles.selectBox(isMobile)} size="small">
+        <FormControl sx={styles.selectBox(theme,isMobile)} size="small">
           <InputLabel>Sort by</InputLabel>
           <Select value={sortBy} label="Sort by" onChange={(e) => setSortBy(e.target.value)}>
             <MenuItem value="Username">Username</MenuItem>
@@ -102,7 +113,13 @@ export const Account = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data !== null ? (
+              {IsLoading ? (
+                  <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}> {/* Render a message or placeholder when data is empty or null */}
+                  <TableCell colSpan={5} align="center"><LoadingAnimation/></TableCell> {/* Adjust colSpan as needed */}
+                </TableRow>
+              ):(
+                <>
+              {data && data.length > 0 ? (
                 data.map((row) => (
                   <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell component="th" scope="row">{row.username}</TableCell>
@@ -114,17 +131,19 @@ export const Account = () => {
                         onClick={() => RestrictAccountAndSearch(row.id)}>Restrict</Button>
                     </TableCell>
                   </TableRow>
-                ))
+                )
+              )
               ) : (
                 <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}> {/* Render a message or placeholder when data is empty or null */}
-                  <TableCell colSpan={3} align="center">No data available</TableCell> {/* Adjust colSpan as needed */}
+                  <TableCell colSpan={5} align="center">No Data Available</TableCell> {/* Adjust colSpan as needed */}
                 </TableRow>
               )}
+            </>)}
             </TableBody>
           </Table>
         </TableContainer>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1%' }}>
-          <FormControl sx={[styles.selectBox(isMobile), { marginRight: '1%' }]} size="small">
+          <FormControl sx={[styles.selectBox(theme,isMobile), { marginRight: '1%' }]} size="small">
             <InputLabel>Rows per page</InputLabel>
             <Select value={pageSize} label="Rows per page" onChange={(e) => setPageSize(Number(e.target.value.toString()))}>
               {RowsPerPage.map((option) => (

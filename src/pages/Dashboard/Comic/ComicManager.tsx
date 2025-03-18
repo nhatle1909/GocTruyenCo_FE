@@ -1,8 +1,6 @@
-import { FormatAlignJustify } from "@mui/icons-material";
-import { Box, Paper, Snackbar, Tab, Tabs, useMediaQuery, useTheme } from "@mui/material"
+import { Alert, Box, Paper, Snackbar, Tab, Tabs, useMediaQuery, useTheme } from "@mui/material"
 import React, { useEffect } from "react";
 import { styles } from "../Style/DashboardStyle";
-
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 export const ComicDashboard = () => {
@@ -51,13 +49,22 @@ export const ComicDashboard = () => {
                 autoHideDuration={3000}
                 onClose={handleSnackbarClose}
                 open={trigger.trigger}
-                message={trigger.message}
-            />
+                // message={trigger.message}
+            > 
+            <Alert
+            onClose={handleSnackbarClose}
+            severity="warning"
+            variant="filled"
+            sx={{ width: '100%' }}
+          >
+           {trigger.message}
+          </Alert>
+          </Snackbar>
             <Paper component="form" elevation={3} sx={styles.tabBar(theme, isMobile)}>
                 <Tabs 
                     orientation={isMobile ? 'vertical' : 'horizontal'}
                     variant="fullWidth"
-                    sx={styles.tabs(isMobile)}
+                    sx={styles.tabs(theme,isMobile)}
                     value={tabSelected}
                     onChange={(e, value) => comicNavigate(value)}
                 >

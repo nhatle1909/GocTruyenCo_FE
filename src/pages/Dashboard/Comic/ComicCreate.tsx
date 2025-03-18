@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef} from "react";
 import {
     Box,
     Button,
@@ -12,12 +12,16 @@ import {
     useMediaQuery,
     useTheme,
     FormHelperText,
+    Snackbar,
+    Alert,
 } from "@mui/material";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { styles } from "../Style/DashboardStyle";
 import { cleanStringArray } from '../../../utils/Utils';
 import { ConvertNameToCategoryId, GetAllComicCategories } from "../../../model/ComicCategoryModel";
 import { CreateNewComic } from "../../../model/ComicModel";
+import { useAuthStore } from "../../../store/authStore";
+import { decodeJWT } from "../../../utils/jwtUtils";
 
 interface FormErrors {
     name: string;
@@ -29,6 +33,9 @@ interface FormErrors {
 export const ComicCreate = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const {token} = useAuthStore.getState();
+    const id = decodeJWT(token).nameid;
+    const [trigger, setTrigger] = useState({ trigger: false, message: "" });
     const fileOpenRef = useRef<HTMLInputElement>(null);
     const [comicData, setComicData] = useState({
         themeImage: null as File | null,
@@ -90,11 +97,13 @@ export const ComicCreate = () => {
         setIsSubmitting(true);
         try {
             const categoryId = ConvertNameToCategoryId(categories, categoryStringArray);
-            await CreateNewComic('123', comicData.name, comicData.description, categoryId, comicData.themeImage, '123');
+            await CreateNewComic(id, comicData.name, comicData.description, categoryId, comicData.themeImage);
+            setTrigger({ trigger: true, message: 'Comic created successfully!' });
             clearData();
             // You might want to add a success message or redirect here
         } catch (error) {
             console.error('Error creating comic:', error);
+            setTrigger({ trigger: true, message: 'Comic created failed!' });
             // Handle error appropriately
         } finally {
             setIsSubmitting(false);
@@ -151,6 +160,22 @@ export const ComicCreate = () => {
 
     return (
         <Box sx={[styles.tablePaper, style.mainContent]} component="form" onSubmit={handleSubmit}>
+                       <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                autoHideDuration={3000}
+                onClose={()=>  setTrigger({ trigger: false, message: "" })}
+                open={trigger.trigger}
+                // message={trigger.message}
+            > 
+            <Alert
+            onClose={()=>  setTrigger({ trigger: false, message: "" })}
+            severity="info"
+            variant="filled"
+            sx={{ width: '100%' }}
+          >
+           {trigger.message}
+          </Alert>
+          </Snackbar>
             <Paper sx={style.comicImage}>
                 <Box 
                     component="img" 
@@ -183,7 +208,7 @@ export const ComicCreate = () => {
                     required
                     error={!!errors.name}
                     helperText={errors.name}
-                    sx={[styles.inputField(isMobile), style.textField(theme)]}
+                    sx={[styles.inputField(theme,isMobile), style.textField(theme)]}
                     value={comicData.name}
                     onChange={(e) => handleComicDataChange('name', e.target.value)}
                 />
@@ -196,7 +221,7 @@ export const ComicCreate = () => {
                     fullWidth
                     error={!!errors.description}
                     helperText={errors.description}
-                    sx={[styles.inputField(isMobile), style.textField(theme)]}
+                    sx={[styles.inputField(theme,isMobile), style.textField(theme)]}
                     value={comicData.description}
                     onChange={(e) => handleComicDataChange('description', e.target.value)}
                 />

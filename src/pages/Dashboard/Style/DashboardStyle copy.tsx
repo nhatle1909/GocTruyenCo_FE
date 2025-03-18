@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material';
-import { transitions } from '../../../styles/commonStyles';
+import { transitions} from '../../../styles/commonStyles';
 
 export const styles = {
   content: (theme: Theme) => ({
@@ -11,30 +11,28 @@ export const styles = {
     alignSelf: 'flex-end',
     transition: transitions.smooth,
     }),
-
   searchBar: (theme: Theme, isMobile: boolean) => ({
       display: 'flex',
         flexDirection: isMobile ? 'column' : 'row',
     gap: theme.spacing(1),
     padding: theme.spacing(1.5),
-    borderRadius: 2,
+     borderRadius:2,
     boxShadow: theme.shadows[3],
-    backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.background.paper,
     width: isMobile ? "95%" : 'auto',
     maxWidth: { sm: '80%', md: '70%', lg: '60%' },
-    margin: isMobile ? "2%" : "1%",
+        margin: isMobile ? "2%" : "1%",
     marginBottom: theme.spacing(3),
     transition: transitions.smooth,
     border: `1px solid ${theme.palette.divider}`,
-  }),
-
+    }),
   inputField: (theme: Theme, isMobile: boolean) => ({
     width: isMobile ? "100%" : '30%',
     flexGrow: 1,
     '& .MuiOutlinedInput-root': {
       '&:hover fieldset': {
         borderColor: theme.palette.primary.main,
-      },
+        },
       '& fieldset': {
         borderColor: theme.palette.divider,
       },
@@ -75,10 +73,10 @@ export const styles = {
     backgroundColor: theme.palette.background.paper,
     width: 'auto',
     maxWidth: '95%',
-    borderRadius: 2,
+    borderRadius:  2,
     height: 'auto',
     overflowY: 'auto',
-    margin: theme.spacing(0, '1%', '3%', '1%'),
+    margin: "0 1% 3% 1%",
     padding: theme.spacing(2),
     transition: transitions.smooth,
     border: `1px solid ${theme.palette.divider}`,
@@ -95,7 +93,7 @@ export const styles = {
     flexDirection: isMobile ? 'column' : 'row',
     gap: theme.spacing(0.5),
     padding: theme.spacing(1),
-    borderRadius: 2,
+    borderRadius: theme.shape.borderRadius,
     boxShadow: theme.shadows[2],
     backgroundColor: theme.palette.background.paper,
     width: isMobile ? "85%" : 'auto',
@@ -115,7 +113,7 @@ export const styles = {
     '& .MuiTab-root': {
       minHeight: '40px',
       padding: '6px 12px',
-      fontSize: '0.6rem',
+      fontSize: '0.7rem',
       color: theme.palette.text.primary,
       '&.Mui-selected': {
         color: theme.palette.primary.main,

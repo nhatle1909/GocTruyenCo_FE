@@ -3,6 +3,7 @@ import { Card, CardContent, Typography, CardActionArea, Avatar, Box, IconButton,
 import  LogoutIcon  from '@mui/icons-material/Logout';
 import  NotificationsIcon  from '@mui/icons-material/Notifications';
 import { ThemeContext } from '../context/ThemeContext';
+import { useNavigate } from 'react-router-dom';
 
 interface NotificationItemProps {
     avatar: string;
@@ -99,6 +100,7 @@ export const Notification:React.FC<NotificationProps> = ({avatarURL,onLogout}) =
   
     const open = Boolean(anchorEl);
     const id = open ? 'notification-popover' : undefined;
+    const navigate = useNavigate();
     return (
         <Box sx={{ display: 'flex', alignItems: 'center',}}>
         <IconButton onClick={onNotificationClick}>
@@ -131,11 +133,11 @@ export const Notification:React.FC<NotificationProps> = ({avatarURL,onLogout}) =
           />
         ))}
       </Popover>
-      <Avatar src={avatarURL} sx={{  width: 35,  height: 35, margin: '0 16px', }} />
+      <Avatar onClick={() => navigate('/admin/account' )} src={avatarURL} sx={{  width: 35,  height: 35, margin: '0 16px', }} />
       <IconButton onClick={onLogout}>
         <LogoutIcon />
       </IconButton>
       </Box>
     )
-    
+  
 }
